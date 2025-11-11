@@ -1,165 +1,174 @@
 ﻿# -*- coding: utf-8 -*-
-"""
-GAgroSmart - Pure Hindi Streamlit App with Browser Voice Input (Web Speech API)
-Developed by Hemant Kumawat
-"""
-
 import streamlit as st
-import pandas as pd
 import time
-import os
-import json
+import random
 import streamlit.components.v1 as components
 
 st.set_page_config(page_title="GAgroSmart", page_icon="🌿", layout="centered")
 
-# Header
-st.markdown(
-    """
-    <div style="text-align:center; padding:10px; border-radius:8px; background: linear-gradient(90deg,#e8f5e9,#fff9e6);">
-        <h1 style="margin:4px 0; font-family: 'Noto Sans', sans-serif;">GAgroSmart</h1>
-        <div style="font-size:16px; margin-bottom:6px;">किसान का स्मार्ट साथी — फसल एवं मिट्टी के अनुसार खाद सुझाव</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+# 🌈 Custom CSS for Attractive Farmer UI
+st.markdown("""
+<style>
+body {
+    background: linear-gradient(180deg, #e8f5e9 0%, #ffffff 100%);
+    font-family: 'Noto Sans Devanagari', sans-serif;
+}
+h1, h2, h3, h4 {
+    color: #1b5e20;
+    text-align: center;
+}
+.stButton>button {
+    background: linear-gradient(90deg, #43a047, #1b5e20);
+    color: white;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 18px;
+    border: none;
+    width: 100%;
+}
+.stButton>button:hover {
+    background: linear-gradient(90deg, #66bb6a, #2e7d32);
+    transform: scale(1.03);
+}
+.card {
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0px 3px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 15px;
+}
+.recommend {
+    background-color: #f1f8e9;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+.footer {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: 40px;
+}
+.loader {
+    text-align: center;
+    font-size: 24px;
+    color: #2e7d32;
+    padding: 50px;
+}
+.notification {
+    background: #e8f5e9;
+    padding: 10px;
+    border-left: 5px solid #43a047;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    animation: fadeIn 1s;
+}
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+</style>
+""", unsafe_allow_html=True)
 
-st.write("")  # spacing
+# 🌾 Loading Animation
+with st.spinner("🌿 AgroSmart लोड हो रहा है..."):
+    time.sleep(1.5)
+st.markdown("""
+<div class='loader'>
+🌾 <b>GAgroSmart</b><br>
+<b>किसान का स्मार्ट साथी</b><br>
+<small>AI आधारित खाद एवं फसल सुझाव प्रणाली</small>
+</div>
+""", unsafe_allow_html=True)
+time.sleep(1)
 
-# Left: inputs, Right: results layout
-col1, col2 = st.columns([1, 1])
+# 🔔 Random Smart Notifications
+notifications = [
+    "🌦️ बारिश के आसार हैं — सिंचाई रोक दें!",
+    "🌱 मिट्टी में नमी अच्छी है — आज यूरिया डालना सही रहेगा।",
+    "⚠️ तापमान गिरने की संभावना — पाले से बचाव करें।",
+    "🐛 फसल पर कीट दिखे तो नीम आधारित जैविक कीटनाशक उपयोग करें।",
+]
+st.markdown(f"<div class='notification'>{random.choice(notifications)}</div>", unsafe_allow_html=True)
 
-with col1:
-    st.subheader("किसी भी फसल के लिए जानकारी दर्ज करें")
-    crop = st.text_input("1) फसल का नाम दर्ज करें (उदा: प्याज, गेहूँ, टमाटर):")
-    soil = st.selectbox("2) मिट्टी का प्रकार चुनें:", ["दोमट मिट्टी", "काली मिट्टी", "रेतीली मिट्टी", "लाल मिट्टी", "अन्य"])
-    irrigation = st.selectbox("3) सिंचाई की स्थिति:", ["सिंचित", "असिंचित"])
-    area = st.number_input("4) क्षेत्रफल (एकड़ में):", min_value=0.01, value=1.0, step=0.01)
-    stage = st.selectbox("5) फसल का चरण:", ["बोवाई/अंकुरण", "विकास", "फूल/फल का चरण", "कटाई से पहले"])
-    st.write("")
+# 🪴 Input Section
+st.markdown("<div class='card'>", unsafe_allow_html=True)
+st.subheader("📋 फसल की जानकारी दर्ज करें")
+crop = st.text_input("1️⃣ फसल का नाम (उदा: गेहूँ, प्याज, टमाटर):")
+soil = st.selectbox("2️⃣ मिट्टी का प्रकार:", ["दोमट मिट्टी", "काली मिट्टी", "रेतीली मिट्टी", "लाल मिट्टी"])
+irrigation = st.selectbox("3️⃣ सिंचाई की स्थिति:", ["सिंचित", "असिंचित"])
+area = st.number_input("4️⃣ क्षेत्रफल (एकड़ में):", min_value=0.01, value=1.0)
+stage = st.selectbox("5️⃣ फसल का चरण:", ["बोवाई/अंकुरण", "विकास", "फूल/फल का चरण", "कटाई से पहले"])
+st.markdown("</div>", unsafe_allow_html=True)
 
-
-    st.markdown("**6) आवाज़ से फसल बताने के लिए नीचे बटन दबाएँ (ब्राउज़र माइक्रोफ़ोन अनुमति दें)**")
-    # Voice recognition component (browser Web Speech API)
-    # This HTML/JS uses the Web Speech API to recognize Hindi speech and posts the result back to Streamlit.
-    voice_html = """
-    <div style="text-align:center;">
-      <button id="start-btn" style="font-size:16px; padding:10px 18px; border-radius:6px; background:#2e7d32; color:white; border:none;">
-        🎙️ बोलकर फसल बताएं
-      </button>
-      <div id="status" style="margin-top:8px; font-size:14px; color:#555;"></div>
-      <script>
-        const btn = document.getElementById('start-btn');
-        const status = document.getElementById('status');
-        function sendToStreamlit(text) {
-          // Post message to Streamlit's iframe parent so Streamlit component returns the value
-          const payload = {event: 'speech_result', value: text};
-          window.parent.postMessage(payload, "*");
-        }
-        btn.onclick = async function() {
-          status.innerText = "माइक्रोफ़ोन के लिए अनुमति माँगी जा रही है...";
-          // Check for browser support
-          if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            status.innerText = "यह ब्राउज़र आवाज़ पहचान को समर्थन नहीं करता। Chrome/Edge में खोलें।";
+# 🎧 Voice Input Button
+st.markdown("""
+<div class='card' style='text-align:center;'>
+    <h4>🎙️ बोलकर फसल बताएं</h4>
+    <button onclick="startVoice()" style="font-size:18px; padding:10px 20px; border-radius:10px; background:#43a047; color:white; border:none;">🎧 बोलें</button>
+    <div id='result' style='margin-top:10px; font-size:18px; color:#1b5e20;'></div>
+    <script>
+    function startVoice(){
+        const status=document.getElementById('result');
+        if(!('webkitSpeechRecognition' in window)){
+            status.innerText="⚠️ कृपया Chrome ब्राउज़र का उपयोग करें।";
             return;
-          }
-          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-          const recognition = new SpeechRecognition();
-          recognition.lang = 'hi-IN';
-          recognition.interimResults = false;
-          recognition.maxAlternatives = 1;
-          recognition.onstart = () => { status.innerText = "कृपया बोलें..."; }
-          recognition.onerror = (e) => { status.innerText = "आवाज़ समझने में त्रुटि: " + e.error; }
-          recognition.onresult = (event) => {
-            const text = event.results[0][0].transcript;
-            status.innerText = "आपने कहा: " + text;
-            // send recognized text to Streamlit
-            sendToStreamlit(text);
-          };
-          recognition.onend = () => { /* finished */ }
-          recognition.start();
         }
-      </script>
-    </div>
-    """
+        const rec=new webkitSpeechRecognition();
+        rec.lang='hi-IN';
+        rec.start();
+        rec.onresult=function(event){
+            status.innerText="आपने कहा: " + event.results[0][0].transcript;
+        };
+    }
+    </script>
+</div>
+""", unsafe_allow_html=True)
 
-    # When components.html returns, it returns the last postMessage payload if any.
-    # We will capture that value below.
-    voice_result = components.html(voice_html, height=150)
+# 💧 Recommendation Logic
+st.markdown("<div class='card'>", unsafe_allow_html=True)
+st.subheader("🧪 खाद सुझाव परिणाम")
 
-    # Fallback manual input
-    st.markdown("---")
-    st.markdown("**यदि आवाज़ का उपयोग न कर सकें तो यहाँ टाइप करें:**")
-    crop_manual = st.text_input("फ़सल (टाइप करें):", value="")  # second input if user prefers typing
-
-    # Choose final crop value (voice overrides manual if present)
-    final_crop = crop  # default from earlier
-    if voice_result and isinstance(voice_result, dict) and voice_result.get("event") == "speech_result":
-        # Received dictionary payload from the component
-        v = voice_result.get("value", "").strip()
-        if v:
-            final_crop = v
-    elif crop_manual:
-        final_crop = crop_manual
-
-    st.write("")
-
-
-with col2:
-    st.subheader("सुझाव और परिणाम")
-    if not final_crop:
-        st.info("कृपया बाएँ तरफ फ़सल का नाम दर्ज करें या 'बोलकर फसल बताएं' दबाएँ।")
+if crop:
+    crop_lower = crop.strip().lower()
+    recs = []
+    if "गेहूँ" in crop_lower or "wheat" in crop_lower:
+        recs = [
+            ("UREA", "46:0:0", 50, "टिलरिंग के समय दें"),
+            ("DAP", "18:46:0", 50, "बुवाई के समय आधी मात्रा"),
+            ("MOP", "0:0:60", 25, "यदि पोटाश की कमी हो"),
+        ]
+    elif "लहसुन" in crop_lower or "garlic" in crop_lower:
+        recs = [
+            ("NPK 12:32:16", "12:32:16", 70, "बुवाई के समय डालें"),
+            ("UREA", "46:0:0", 40, "विकास के दौरान दो बार में दें"),
+            ("वर्मी कम्पोस्ट", "organic", 150, "मिट्टी की उर्वरता के लिए"),
+        ]
+    elif "प्याज" in crop_lower or "onion" in crop_lower:
+        recs = [
+            ("DAP", "12:32:16", 100, "बेसल एप्लिकेशन"),
+            ("UREA", "46:0:0", 60, "विकास चरण में विभाजित करें"),
+            ("Zinc Sulphate", "Zn", 10, "यदि जिंक की कमी हो तो"),
+        ]
     else:
-        with st.spinner("सुझाव निकाल रहे हैं..."):
-            time.sleep(1.0)
-            # Simple rule-based recommendation — इसे बाद में CSV/ML से बदला जाएगा
-            c = final_crop.strip().lower()
-            # basic mapping (expandable)
-            recommendations = []
-            # कुछ exemplar rules (आप अपने fertilizer CSV से replace कर सकते हैं)
-            if any(x in c for x in ["गेहूँ", "गेहू", "gehun", "wheat"]):
-                recommendations = [
-                    {"name": "UREA (यूरिया)", "npk": "46:0:0", "qty_per_acre": 50, "note": "टिलरिंग के समय दें"},
-                    {"name": "DAP", "npk": "18:46:0", "qty_per_acre": 50, "note": "बुवाई के समय आधी मात्रा"},
-                    {"name": "MOP", "npk": "0:0:60", "qty_per_acre": 25, "note": "यदि पोटाश की कमी हो"}
-                ]
-            elif any(x in c for x in ["प्याज", "onion"]):
-                recommendations = [
-                    {"name": "DAP", "npk": "12:32:16", "qty_per_acre": 100, "note": "बेसल एप्लिकेशन"},
-                    {"name": "UREA", "npk": "46:0:0", "qty_per_acre": 60, "note": "विकास चरण में विभाजित करो"},
-                    {"name": "Zinc Sulphate", "npk": "Zn", "qty_per_acre": 10, "note": "यदि जिंक की कमी हो तो"}
-                ]
-            elif any(x in c for x in ["टमाटर", "tomato"]):
-                recommendations = [
-                    {"name": "NPK 20:20:13", "npk": "20:20:13", "qty_per_acre": 80, "note": "फलों के विकास के दौरान"},
-                    {"name": "UREA", "npk": "46:0:0", "qty_per_acre": 30, "note": "लीफ़ विकास के लिए"}
-                ]
-            else:
-                # Default general suggestion
-                recommendations = [
-                    {"name": "संतुलित NPK", "npk": "10:26:26", "qty_per_acre": 50, "note": "मिट्टी रिपोर्ट देखें"},
-                    {"name": "जैविक खाद (गोबर/वर्मी कम्पोस्ट)", "npk": "organic", "qty_per_acre": 200, "note": "मिट्टी की संरचना सुधारने के लिए"}
-                ]
+        recs = [
+            ("संतुलित NPK", "10:26:26", 50, "मिट्टी रिपोर्ट देखें"),
+            ("जैविक खाद", "organic", 200, "मिट्टी की संरचना सुधारने के लिए"),
+        ]
 
-        # Display final results
-        st.markdown(f"### 🌾 फ़सल: **{final_crop}**")
-        st.markdown(f"**मिट्टी:** {soil}  •  **सिंचाई:** {irrigation}  •  **क्षेत्रफल:** {area} एकड़  •  **चरण:** {stage}")
-        st.write("")
-        st.markdown("#### ✅ सुझाए गए उर्वरक (अनुशंसित मात्रा प्रति एकड़):")
-        for r in recommendations:
-            st.markdown(f"- **{r['name']}** ({r['npk']}) — {r['qty_per_acre']} kg/acre  •  _{r['note']}_")
+    st.markdown(f"<h4>🌿 फसल: {crop}</h4>", unsafe_allow_html=True)
+    for name, npk, qty, note in recs:
+        st.markdown(f"<div class='recommend'><b>{name}</b> ({npk}) — {qty} kg/acre<br><i>{note}</i></div>", unsafe_allow_html=True)
+else:
+    st.info("कृपया ऊपर फसल का नाम दर्ज करें।")
 
-        st.markdown("---")
-        st.info("नोट: सटीकता बढ़ाने के लिए मिट्टी की लैब रिपोर्ट अपलोड करें।")
+st.markdown("</div>", unsafe_allow_html=True)
 
-# Footer and developer info
-st.markdown("---")
-st.markdown(
-    """
-    <div style="font-size:13px; color:#555;">
-    Developed by <b>Hemant Kumawat</b> | GAgroSmart © 2025<br>
-    संपर्क: hemantkumawat204@gmail.com
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+# 🧾 Footer
+st.markdown("""
+<div class='footer'>
+Developed by <b>Hemant Kumawat</b> | GAgroSmart © 2025<br>
+📧 hemantkumawat204@gmail.com<br>
+<b>🌿 किसान का स्मार्ट साथी</b>
+</div>
+""", unsafe_allow_html=True)
